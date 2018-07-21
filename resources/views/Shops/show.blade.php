@@ -1,0 +1,114 @@
+@extends('default')
+@section('contents')
+    @include('_nav')
+    @include('_errors')
+    @include('_msg')
+<div class="container">
+    <br>
+    <table class="table table-striped table-bordered table-condensed table-hover">
+
+        <tr>
+            <td>名称</td>
+            <td>
+                {{$shop->shop_name}}
+            </td>
+        </tr>
+
+        <tr>
+            <td>店铺分类</td>
+            <td>
+                {{$shop->Shops_categories->name}}
+            </td>
+        </tr>
+        <tr>
+            <td>评分</td>
+            <td>
+                {{$shop->shop_rating}}
+            </td>
+        </tr>
+        <tr>
+            <td>是否是品牌</td>
+            <td>
+                {{$shop->brand?'是':'否'}}
+            </td>
+        </tr>
+        <tr>
+            <td>是否准时送达</td>
+            <td>
+                {{$shop->ontime?'是':'否'}}
+            </td>
+        </tr>
+        <tr>
+            <td>是否蜂鸟配送</td>
+            <td>
+                {{$shop->fengniao?'是':'否'}}
+            </td>
+        </tr>
+        <tr>
+            <td>是否保标记</td>
+            <td>
+                {{$shop->bao?'是':'否'}}
+            </td>
+        </tr>
+        <tr>
+            <td>是否票标记</td>
+            <td>
+                {{$shop->piao?'是':'否'}}
+            </td>
+        </tr>
+        <tr>
+            <td>是否准标记</td>
+            <td>
+                {{$shop->zhun?'是':'否'}}
+            </td>
+        </tr>
+        <tr>
+            <td>起送金额</td>
+            <td>
+                {{$shop->start_send}}
+            </td>
+        </tr>
+        <tr>
+            <td>配送费</td>
+            <td>
+                {{$shop->send_cost}}
+            </td>
+        </tr>
+        <tr>
+            <td>店公告</td>
+            <td>
+                {{$shop->discount}}
+            </td>
+        </tr>
+        <tr>
+            <td>优惠信息</td>
+            <td>
+                {{$shop->notice}}
+            </td>
+        </tr>
+        <tr>
+            <td>注册时间</td>
+            <td>
+                {{$shop->created_at}}
+            </td>
+        </tr>
+        <tr>
+            <td>店铺图片</td>
+            <td>
+                <img src="{{$shop->shop_img}}" width="100">
+            </td>
+        </tr>
+        <tr>
+            <td>审核</td>
+            <td>
+                <form action="{{route('shops.shen',['shop'=>$shop])}}" method="post">
+                    {{ csrf_field() }}
+                    {{ method_field('PATCH') }}
+                    <button class="btn btn-xs btn-primary" >@if($shop->status==1)禁用@else审核@endif</button>
+                </form>
+            </td>
+        </tr>
+
+    </table>
+</div>
+@endsection
