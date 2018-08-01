@@ -10,6 +10,7 @@
                 <th>ID</th>
                 <th>管理员账号</th>
                 <th>管理员邮箱</th>
+                <th>管理员角色</th>
                 <th colspan="2">操作</th>
             </tr>
             @foreach($admins as $admin)
@@ -17,6 +18,11 @@
                     <td>{{$admin->id}}</td>
                     <td>{{$admin->name}}</td>
                     <td>{{$admin->email}}</td>
+                    <td>
+                    @foreach($admin->getRoleNames() as $name)
+                        {{$name}}
+                        @endforeach
+                    </td>
                     <td><a href="{{route('admins.edit',['admin'=>$admin])}}" class="btn btn-xs btn-primary">修改</a></td>
                     <td>
                         <form action="{{route('admins.update',['admin'=>$admin])}}" method="post">

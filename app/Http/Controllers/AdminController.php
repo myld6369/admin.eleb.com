@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Admins;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
     Public function __construct()
     {
-        $this->middleware('auth', [
-            'except' => ['']
-        ]);
+        $this->middleware(['permission:admin-index']);
     }
     //
     public function index()
@@ -22,7 +22,8 @@ class AdminController extends Controller
 
     public function create()
     {
-        return view('Admin/create');
+        $roles =Role::all();
+        return view('Admin/create',compact('roles'));
     }
 
     public function store(Request $request)
@@ -52,19 +53,31 @@ class AdminController extends Controller
             'captcha.captcha'=>'验证码不正确',
         ]);
 
-        Admins::create([
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'rememberToken'=>'x',
-            'password'=>bcrypt($request->password)
-        ]);
+        DB::beginTransaction();
+        try{
+            $admin =Admins::create([
+                'name'=>$request->name,
+                'email'=>$request->email,
+                'rememberToken'=>'x',
+                'password'=>bcrypt($request->password)
+            ]);
+            $admin->assignRole($request->role);
+            DB::commit();
+        }catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('success', '添加失败');
+            return back();
+        }
+
+
         session()->flash('success', '添加成功');
         return redirect()->route('admins.index');
     }
 
     public function edit(Admins $admin)
     {
-        return view('Admin/edit',compact('admin'));
+        $roles =Role::all();
+        return view('Admin/edit',compact('admin','roles'));
     }
 
     public function update(Request $request,Admins $admin)
@@ -88,12 +101,23 @@ class AdminController extends Controller
             'captcha.captcha'=>'验证码不正确',
         ]);
 
-        $admin->update([
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'rememberToken'=>'x',
-            'password'=>bcrypt($request->password)
-        ]);
+
+        DB::beginTransaction();
+        try{
+            $admin->update([
+                'name'=>$request->name,
+                'email'=>$request->email,
+                'rememberToken'=>'x',
+                'password'=>bcrypt($request->password)
+            ]);
+            $admin->syncRoles($request->role);
+            DB::commit();
+        }catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('success', '添加失败');
+            return back();
+        }
+
         session()->flash('success', '修改成功');
         return redirect()->route('admins.index');
     }

@@ -24,6 +24,14 @@
                 <input type="password" name="repassword" class="form-control">
             </div>
             <div class="form-group">
+                <select name="role[]" class="form-control">
+                    @foreach($roles as $role)
+                        <option value="{{$role->name}}" {{$admin->hasRole($role)?"selected":""}} >{{$role->name}}</option>
+                    @endforeach
+                </select>
+
+            </div>
+            <div class="form-group">
                 <label>验证码</label>
                 <input id="captcha2" class="form-control" name="captcha" >
                 <img class="thumbnail captcha" src="{{ captcha_src('flat') }}" onclick="this.src='/captcha/flat?'+Math.random()" title="点击图片重新获取验证码">

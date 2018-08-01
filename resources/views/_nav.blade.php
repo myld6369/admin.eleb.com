@@ -1,29 +1,36 @@
-<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="navbar navbar-fixed-top navbar-inverse" >
     <div class="container">
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        {{--<div class="nav-logo">--}}
+            {{--<a class="" href="#">--}}
+                {{--<img class="img-responsive" src="" alt="北京市XXXX科技有限公司" style="height:20px;width: auto;" />--}}
+            {{--</a>--}}
+        {{--</div>--}}
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navBar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navBar">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="">首页 <span class="sr-only">(current)</span></a></li>
-                <li><a href="#">Link</a></li>
+                <li><a href="#">首页</a></li>
+
+                @foreach(\App\Models\Nav::where('pid',0)->get() as $value)
+                    @can(\Spatie\Permission\Models\Permission::where('id',$value->permission_id)->first()->name)
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">管理店铺 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{route('menucategories.index',['user'=>\Illuminate\Support\Facades\Auth::user()])}}">管理菜品分类</a></li>
-                        <li><a href="{{route('menus.index')}}">管理菜品</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">One more separated link</a></li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        {{$value->name}}<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        @foreach(\App\Models\Nav::where('pid',$value->id)->get() as $v)
+                        <li><a href="{{route($v->url)}}">{{$v->name}}</a></li>
+                        @endforeach
                     </ul>
                 </li>
+                    @endcan
+            @endforeach
             </ul>
-            <form class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default"><span class="
-glyphicon glyphicon-search"></span></button>
-            </form>
             <ul class="nav navbar-nav navbar-right">
                 @guest
                 <li><a href="#" data-toggle="modal" data-target="#myModal">登录</a></li>
@@ -32,9 +39,9 @@ glyphicon glyphicon-search"></span></button>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{\Illuminate\Support\Facades\Auth::user()->name}}&emsp;<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{route('users.show',['user'=>\Illuminate\Support\Facades\Auth::user()])}}">修改个人信息</a></li>
-                        <li><a href="{{route('users.edit',['user'=>\Illuminate\Support\Facades\Auth::user()])}}">修改商铺信息</a></li>
-                        <li><a href="{{route('users.pass',['user'=>\Illuminate\Support\Facades\Auth::user()])}}">修改个人密码</a></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
                         <li role="separator" class="divider"></li>
                         <li>
                             <form action="{{route('logout')}}" method="post">
@@ -42,17 +49,14 @@ glyphicon glyphicon-search"></span></button>
                                 {{ csrf_field() }}
                                 <button type="submit" class="btn btn-block">注销</button>
                             </form>
-                            <a href="{{route('users.create')}}" class="btn btn-block">注册</a>
                         </li>
                     </ul>
                 </li>
             </ul>
-
             @endauth
-        </div><!-- /.navbar-collapse -->
-
+        </div>
     </div>
-</nav>
+</div>
 
 <!-- Modal -->
 <!-- Modal -->
@@ -88,13 +92,9 @@ glyphicon glyphicon-search"></span></button>
                     <button type="submit" class="btn btn-default btn-block">登录</button>
                 </form>
             </div>
-            <div class="modal-footer">
-                <a href="{{route('users.create')}}" class="btn btn-primary">注册</a>
-            </div>
         </div>
     </div>
 </div>
 
 <br>
 <br>
-

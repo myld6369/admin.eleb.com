@@ -30,7 +30,7 @@ class SessionsController extends Controller
 
         if (Auth::attempt(['name'=>$request->name,'password'=>$request->password],$request->rememberMe)){
             session()->flash('success', '欢迎回来！');
-            return redirect()->route('shops.index');
+            return redirect('login');
         }else{
             return back()->with('danger','很抱歉，您的用户名和密码不匹配')->withInput();
         }

@@ -27,7 +27,7 @@ class ShopsController extends Controller
 
     public function create()
     {
-        $categories =Shops_categories::all();
+        $categories = Shops_categories::all();
         return view('Shops/create',compact('categories'));
 
     }
@@ -35,13 +35,7 @@ class ShopsController extends Controller
     public function store(Request $request)
     {
 
-        $img =$request->shop_img;
-        if (empty($img)){
-            $image ='http://admin.eleb.com/storage/img/9jmZT7025yE2GxHscajYHdfcWoRruwuibivRabuX.gif';
-        }else{
-            $image=$img->store('public/img');
-            $image=Storage::url($image);
-        }
+
         $names =Users::all();
         foreach ($names as $name){
             if ($name->name==$request->name){
@@ -64,7 +58,8 @@ class ShopsController extends Controller
             'name'=>'required|min:6|max:16|unique:users',
             'password'=>'required|min:6|max:16',
             'email'=>'required|email|unique:users',
-            'captcha'=>'required|captcha'
+            'captcha'=>'required|captcha',
+            'shop_img'=>'required'
 
         ],[
             'shop_name.required'=>'店铺名称不能为空!',
@@ -86,14 +81,18 @@ class ShopsController extends Controller
             'password.max'=>'密码不能大于6位',
             'captcha.required'=>'验证码不能为空',
             'captcha.captcha'=>'验证码错误',
+            'shop_img.required'=>'图片不能为空'
         ]);
+
+        $img =$request->shop_img;
+
 
         DB::beginTransaction();
         try{
             $id=Shops::create([
                 'shop_name'=>$request->shop_name,
                 'shop_category_id'=>$request->shop_category_id,
-                'shop_img'=>url($image),
+                'shop_img'=>$img,
                 'shop_rating'=>$request->shop_rating,
                 'brand'=>$request->brand,
                 'on_time'=>$request->on_time,
@@ -118,6 +117,8 @@ class ShopsController extends Controller
                 'remember_token'=>'xxxx'
             ]);
              DB::commit();
+            session()->flash('success', '注册成功');
+            return redirect()->route('shops.index');
         }catch (\Exception $e) {
              DB::rollBack();
             session()->flash('danger', '注册失败');
@@ -138,10 +139,9 @@ class ShopsController extends Controller
     {
         $img =$request->shop_img;
         if (empty($img)){
-            $image =$shop->shop_img;
+            $img=$shop->shop_img;
         }else{
-            $image=$img->store('public/img');
-            $image=Storage::url($image);
+            $img =$request->shop_img;
         }
 
         $this->validate($request,[
@@ -166,7 +166,7 @@ class ShopsController extends Controller
         $shop->update([
             'shop_name'=>$request->shop_name,
             'shop_category_id'=>$request->shop_category_id,
-            'shop_img'=>url($image),
+            'shop_img'=>$img,
             'shop_rating'=>$request->shop_rating,
             'brand'=>$request->brand,
             'on_time'=>$request->on_time,
@@ -207,6 +207,15 @@ class ShopsController extends Controller
         $shop->update([
             'status'=>$status
         ]);
+        if ($status==1){
+            $user= Users::where('shop_id',$shop->id)->first();
+            $email =$user->email;
+            \Illuminate\Support\Facades\Mail::raw('您的店铺'.$shop->shop_name.'已通过审核',function($message)use($email){
+                $message->from('18200367375@163.com','店铺审核通知');
+                $message->to([$email])->subject('皮皮');
+
+            });
+        }
         return back();
     }
 }

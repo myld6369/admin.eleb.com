@@ -16,13 +16,19 @@ class ActivityController extends Controller
         if (empty($today)){
             $activities =Activity::paginate(5);
         }elseif ($today==1){
-            $activities =Activity::where('start_time','>',$time)->paginate(5);
-        }elseif ($today==0){
-            $activities =Activity::where('start_time','<',$time)->where('end_time','<',$time)->paginate(5);
-        } elseif ($today==-1){
-            $activities =Activity::where('end_time','<',$time)->paginate(5);
+            $activities =Activity::where('start_time','>',$time)->paginate(1);
+        }elseif ($today==2){
+            $activities =Activity::where('start_time','<=',$time)->where('end_time','>=',$time)->paginate(1);
+
+        }elseif ($today==3){
+            $activities =Activity::where('end_time','<',$time)->paginate(1);
         }
-        return view('Activity.index',compact('activities'));
+
+        $data=[
+            'start_time'=>$request->start_time,
+            'end_time'=>$request->end_time,
+        ];
+        return view('Activity.index',compact('activities','data'));
     }
 
     public function create()

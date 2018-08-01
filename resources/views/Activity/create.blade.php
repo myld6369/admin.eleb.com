@@ -14,11 +14,11 @@
             </div>
             <div class="form-group">
                 <label>选择开始时间</label>
-                <input type="date" name="start_time" class="form-control" value="{{date("Y-m-d H:i:s",old('start_time'))}}">
+                <input type="datetime-local" name="start_time" class="form-control" value="{{date("Y-m-d H:i:s",old('start_time'))}}">
             </div>
             <div class="form-group">
                 <label>选择结束时间</label>
-                <input type="date" name="end_time" class="form-control" value="{{date("Y-m-d H:i:s",old('end_time'))}}">
+                <input type="datetime-local" name="end_time" class="form-control" value="{{date("Y-m-d H:i:s",old('end_time'))}}">
             </div>
             <div class="form-group">
                 <label>内容</label>

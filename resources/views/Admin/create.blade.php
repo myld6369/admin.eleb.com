@@ -24,6 +24,11 @@
                 <input type="password" name="repassword" class="form-control">
             </div>
             <div class="form-group">
+                @foreach($roles as $role)
+                    {{$role->name}}: <input type="checkbox" name="role[]" value="{{$role->name}}"> &emsp;
+                    @endforeach
+            </div>
+            <div class="form-group">
                 <label>验证码</label>
                 <input id="captcha2" class="form-control" name="captcha" >
                 <img class="thumbnail captcha" src="{{ captcha_src('flat') }}" onclick="this.src='/captcha/flat?'+Math.random()" title="点击图片重新获取验证码">

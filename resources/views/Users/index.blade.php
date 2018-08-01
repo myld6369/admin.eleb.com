@@ -37,7 +37,7 @@
                 </tr>
             @endforeach
             <tr>
-                <td colspan="10"><a href="{{route('shops.create')}}">添加</a></td>
+                <td colspan="10"><a href="{{route('shops.create')}}" class="btn btn-xs btn-primary">添加</a></td>
             </tr>
         </table>
     </div>

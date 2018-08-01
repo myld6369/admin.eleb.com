@@ -29,26 +29,25 @@ class Shops_categoriesController extends Controller
 
     public function store(Request $request)
     {
-        $img =$request->img;
-        if (empty($img)){
-            $image ='public/img/5HlwEqtJNUEEbjT73j9d6dUfLrftFhex5LaT2fly.gif';
-        }else{
-            $image=$img->store('public/img');
-        }
+
+
 
         $this->validate($request,[
             'name'=>'required|max:10',
+            'img'=>'required'
         ],[
             'name.required'=>'分类名称不能为空!',
             'name.max'=>'分类名称最多10个字符',
+            'img.required'=>'图片不能为空'
         ]);
         $status=$request->status;
         if (empty($status)){
             $status=0;
         }
+        $img =$request->img;
         Shops_categories::create([
             'name'=>$request->name,
-            'img'=>$image,
+            'img'=>$img,
             'status'=>$status
         ]);
         session()->flash('success', '添加成功');
@@ -64,12 +63,7 @@ class Shops_categoriesController extends Controller
 
     public function update(Request $request,Shops_categories $shops_category)
     {
-        $img =$request->img;
-        if (empty($img)){
-            $image =$shops_category->img;
-        }else{
-            $image=$img->store('public/img');
-        }
+
 
         $this->validate($request,[
             'name'=>'required|max:10',
@@ -81,9 +75,15 @@ class Shops_categoriesController extends Controller
         if (empty($status)){
             $status=0;
         }
+        $img =$request->img;
+        if (empty($img)){
+            $img=$shops_category->img;
+        }else{
+            $img =$request->img;
+        }
         $shops_category->update([
             'name'=>$request->name,
-            'img'=>$image,
+            'img'=>$img,
             'status'=>$status
         ]);
         session()->flash('success', '修改成功');
