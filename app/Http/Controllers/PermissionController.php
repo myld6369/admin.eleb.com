@@ -22,9 +22,10 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'name'=>'required'
+            'name'=>'required|unique:permissions',
         ],[
-            'name.required'=>'用户名不能为空'
+            'name.required'=>'权限不能为空',
+            'name.unique'=>'该权限已存在,请勿重复添加'
         ]);
 
         Permission::create([

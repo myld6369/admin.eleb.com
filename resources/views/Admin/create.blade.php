@@ -24,8 +24,9 @@
                 <input type="password" name="repassword" class="form-control">
             </div>
             <div class="form-group">
+                <label>角色</label>
                 @foreach($roles as $role)
-                    {{$role->name}}: <input type="checkbox" name="role[]" value="{{$role->name}}"> &emsp;
+                    <input type="checkbox" name="role[]" value="{{$role->name}}"> {{$role->name}}
                     @endforeach
             </div>
             <div class="form-group">

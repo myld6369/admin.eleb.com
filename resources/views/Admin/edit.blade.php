@@ -24,11 +24,11 @@
                 <input type="password" name="repassword" class="form-control">
             </div>
             <div class="form-group">
-                <select name="role[]" class="form-control">
+
                     @foreach($roles as $role)
-                        <option value="{{$role->name}}" {{$admin->hasRole($role)?"selected":""}} >{{$role->name}}</option>
+                        {{$role->name}}: <input type="checkbox" name="role[]" value="{{$role->name}}" {{$admin->hasRole($role)?"checked":""}}>
+
                     @endforeach
-                </select>
 
             </div>
             <div class="form-group">

@@ -46,3 +46,14 @@ Route::get('/index',function(){
     return view('Index/index');
 });
 
+Route::get('403',function (){
+    return "您的权限不足";
+})->name('403');
+
+Route::resource('/events','EventController');
+Route::resource('/eventprizes','EventPrizeController');
+Route::resource('/eventmembers','EventMemberController');
+Route::resource('/draws','DrawController');
+Route::get('/prize{event}','EventController@prize')->name('events.prize');
+
+

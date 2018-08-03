@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admins;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
@@ -11,23 +12,36 @@ class AdminController extends Controller
 {
     Public function __construct()
     {
-        $this->middleware(['permission:admin-index']);
+        $this->middleware('auth',[
+            'expect'=>['']
+        ]);
     }
     //
     public function index()
     {
+        if (!Auth::user()->can('admin-index')){
+            return redirect()->route('403');
+        }
+
         $admins =Admins::all();
         return view('Admin/index',compact('admins'));
     }
 
     public function create()
     {
+        if (!Auth::user()->can('admin-create')){
+            return redirect()->route('403');
+        }
+
         $roles =Role::all();
         return view('Admin/create',compact('roles'));
     }
 
     public function store(Request $request)
     {
+        if (!Auth::user()->can('admin-create')){
+            return redirect()->route('403');
+        }
         $admins = Admins::all();
         foreach ($admins as $admin){
             if ($admin->name==$request->name){

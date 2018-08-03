@@ -17,19 +17,23 @@
                 <li><a href="#">首页</a></li>
 
                 @foreach(\App\Models\Nav::where('pid',0)->get() as $value)
-                    @can(\Spatie\Permission\Models\Permission::where('id',$value->permission_id)->first()->name)
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        {{$value->name}}<span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                        @foreach(\App\Models\Nav::where('pid',$value->id)->get() as $v)
-                        <li><a href="{{route($v->url)}}">{{$v->name}}</a></li>
+                    @if(\App\Models\Nav::where('pid',$value->id)->get()->count()>=1)
+                        @can(\Spatie\Permission\Models\Permission::where('id',$value->permission_id)->first()->name)
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    {{$value->name}}<span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    @foreach(\App\Models\Nav::where('pid',$value->id)->get() as $v)
+                                        <li><a href="{{route($v->url)}}">{{$v->name}}</a></li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @endcan
+                        @endif
                         @endforeach
-                    </ul>
-                </li>
-                    @endcan
-            @endforeach
+
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 @guest

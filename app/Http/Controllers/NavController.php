@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Nav;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 
@@ -12,6 +13,9 @@ class NavController extends Controller
     //
     public function index()
     {
+        if (!Auth::user()->can('nav-index')){
+            return redirect()->route('403');
+        }
          $navs =Nav::paginate(5);
          $nav['pname']=[];
          foreach ($navs as &$nav){
@@ -27,6 +31,9 @@ class NavController extends Controller
 
     public function create()
     {
+        if (!Auth::user()->can('nav-create')){
+            return redirect()->route('403');
+        }
         $permissions = Permission::all();
         $navs =Nav::all();
         return view('Nav/create',compact('navs','permissions'));
@@ -34,6 +41,9 @@ class NavController extends Controller
 
     public function store(Request $request)
     {
+        if (!Auth::user()->can('nav-create')){
+            return redirect()->route('403');
+        }
         $this->validate($request,[
             'name'=>'required|unique:navs',
             'url'=>'required',
@@ -60,6 +70,9 @@ class NavController extends Controller
 
     public function edit(Nav $nav)
     {
+        if (!Auth::user()->can('nav-edit')){
+            return redirect()->route('403');
+        }
         $permissions = Permission::all();
         $navs =Nav::all();
         return view('Nav.edit',compact('nav','navs','permissions'));
@@ -67,6 +80,9 @@ class NavController extends Controller
 
     public function update(Request $request,Nav $nav)
     {
+        if (!Auth::user()->can('nav-edit')){
+            return redirect()->route('403');
+        }
         $this->validate($request,[
             'name'=>[
                 'required',
